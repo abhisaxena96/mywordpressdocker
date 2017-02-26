@@ -1,0 +1,23 @@
+FROM library/wordpress
+CMD ["echo","Welcome to my wordpress file"]
+
+RUN sudo apt-get install apache2 apache2-utils
+RUN sudo systemctl enable apache2
+RUN sudo systemctl start apache2
+CMD ["echo","Next step to install mySql fle"]
+RUN sudo apt-get install mysql-client mysql-server
+RUN sudo mysql_secure_installation 
+CMD ["Install PHP Modules"]
+RUN sudo apt-get install php7.0 php7.0-mysql libapache2-mod-php7.0 php7.0-cli php7.0-cgi php7.0-gd  
+
+CMD ["echo","Furthermore, to test if php is working in collaboration with the web server, we need to create a info.php file inside /var/www/html."]
+
+ENV - WORDPRESS_DB_PASSWORD=password
+RUN sudo vi /var/www/html/info.php
+RUN wget -c http://wordpress.org/latest.tar.gz
+RUN  tar -xzvf latest.tar.gz
+CMD ["echo","Move the extracted file from the wordpress folder"] 
+RUN sudo rsync -av wordpress/* /var/www/html/
+RUN sudo chown -R www-data:www-data /var/www/html/
+RUN sudo chmod -R 755 /var/www/html/
+
